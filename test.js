@@ -5,7 +5,7 @@ const tap = require("tap");
 const fastifyMongoose = require("./index");
 
 tap.test("fastify.mongoose should exist", async test => {
-  test.plan(3);
+  test.plan(6);
 
   fastify.register(fastifyMongoose, {
     uri: "mongodb://localhost:27017/test",
