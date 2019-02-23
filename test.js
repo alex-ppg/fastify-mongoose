@@ -4,7 +4,7 @@ const fastify = require("fastify")();
 const tap = require("tap");
 const fastifyMongoose = require("./index");
 
-tap.test("fastify.mongoose should exist", async test => {
+tap.only("fastify.mongoose should exist", async test => {
   test.plan(6);
 
   fastify.register(fastifyMongoose, {
@@ -78,6 +78,7 @@ tap.test("fastify.mongoose should exist", async test => {
     test.strictEqual(username, "test");
     test.strictEqual(password, undefined);
     test.strictEqual(email, "test@example.com");
+    test.end();
   } catch (e) {
     test.fail("Fastify threw", e);
   }
