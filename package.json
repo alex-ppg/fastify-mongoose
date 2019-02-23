@@ -1,0 +1,26 @@
+{
+  "name": "fastify-mongoose",
+  "description": "A Fastify plugin to connect to a MongoDB instance via the Mongoose ODM",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-ppg/fastify-mongoose.git"
+  },
+  "keywords": [
+    "fastify",
+    "api",
+    "database",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "Alex Papageorgiou",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/alex-ppg/fastify-mongoose/issues"
+  },
+  "homepage": "https://github.com/alex-ppg/fastify-mongoose#readme"
+}
