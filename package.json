@@ -26,5 +26,9 @@
   "devDependencies": {
     "fastify": "^1.14.1",
     "tap": "^12.5.3"
+  },
+  "dependencies": {
+    "fastify-plugin": "^1.5.0",
+    "mongoose": "^5.4.15"
   }
 }
