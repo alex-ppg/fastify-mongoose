@@ -26,6 +26,20 @@ fastify.register(
     },
     models: [
       {
+        name: "posts",
+        alias: "Post",
+        schema: {
+          title: {
+            type: String,
+            required: true
+          },
+          content: {
+            type: String,
+            required: true
+          }
+        }
+      },
+      {
         name: "accounts",
         alias: "Account",
         schema: {
@@ -49,6 +63,14 @@ fastify.register(
               message: props => `${props.value} is not a valid email!`
             }
           },
+          // We can add references to other Schemas like-so
+          posts: [
+            {
+              type: "ObjectId",
+              ref: "Post",
+              validateExistance: true
+            }
+          ],
           createdAtUTC: {
             type: Date,
             required: true
@@ -87,6 +109,8 @@ Any models declared should follow the following format:
 ```
 
 The `schemaDefinition` variable should be created according to the [Mongoose Model Specification](https://mongoosejs.com/docs/schematypes.html).
+
+Keep in mind that, if an `"ObjectId"` is specified as the `type`, the referenced `Schema` must have been defined first in the `models` input array of the library.
 
 ## Author
 

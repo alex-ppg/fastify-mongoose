@@ -3,7 +3,62 @@
 const fastifyPlugin = require("fastify-plugin");
 const mongoose = require("mongoose");
 
-async function mongooseConnector(fastify, { uri, settings, models = [] }) {
+const fixReferences = (fastify, schema) => {
+  Object.keys(schema).forEach(key => {
+    if (schema[key].type === "ObjectId") {
+      schema[key].type = mongoose.Schema.Types.ObjectId;
+
+      if (schema[key].validateExistance) {
+        delete schema[key].validateExistance;
+        schema[key].validate = {
+          isAsync: true,
+          validator: (v, cb) => {
+            decorator[schema[key].ref]
+              .findById(v)
+              .then(() => {
+                cb(true);
+              })
+              .catch(() => {
+                cb(
+                  false,
+                  `${schema[key].ref} with ID ${v} does not exist in database!`
+                );
+              });
+          }
+        };
+      }
+    } else if (schema[key].length !== undefined) {
+      schema[key].forEach(member => {
+        if (member.type === "ObjectId") {
+          schema[key].type = mongoose.Schema.Types.ObjectId;
+
+          if (schema[key].validateExistance) {
+            delete schema[key].validateExistance;
+            schema[key].validate = {
+              isAsync: true,
+              validator: (v, cb) => {
+                decorator[schema[key].ref]
+                  .findById(v)
+                  .then(() => {
+                    cb(true);
+                  })
+                  .catch(() => {
+                    /* istanbul ignore next */
+                    cb(false, `Post with ID ${v} does not exist in database!`);
+                  });
+              }
+            };
+          }
+        }
+      });
+    }
+  });
+};
+
+async function mongooseConnector(
+  fastify,
+  { uri, settings, models = [], useNameAndAlias = false }
+) {
   await mongoose.connect(
     uri,
     settings
@@ -15,11 +70,24 @@ async function mongooseConnector(fastify, { uri, settings, models = [] }) {
 
   if (models.length !== 0) {
     models.forEach(model => {
-      decorator[
-        model.alias
-          ? model.alias
-          : `${model.name[0].toUpperCase()}${model.name.slice(1)}`
-      ] = mongoose.model(model.name, new mongoose.Schema(model.schema));
+      fixReferences(decorator, model.schema);
+
+      if (useNameAndAlias) {
+        if (model.alias === undefined)
+          throw new Error(`No alias defined for ${model.name}`);
+
+        decorator[model.alias] = mongoose.model(
+          model.alias,
+          new mongoose.Schema(model.schema),
+          model.name
+        );
+      } else {
+        decorator[
+          model.alias
+            ? model.alias
+            : `${model.name[0].toUpperCase()}${model.name.slice(1)}`
+        ] = mongoose.model(model.name, new mongoose.Schema(model.schema));
+      }
     });
   }
 
