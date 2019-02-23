@@ -1,5 +1,5 @@
 {
-  "name": "fastify-mongoose",
+  "name": "fastify-mongoose-driver",
   "description":
     "A Fastify plugin to connect to a MongoDB instance via the Mongoose ODM",
   "version": "1.0.0",
