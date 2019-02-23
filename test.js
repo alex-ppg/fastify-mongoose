@@ -58,7 +58,8 @@ tap.test("fastify.mongoose should exist", async test => {
       email,
       createdAtUTC
     });
-    return await account.save();
+    await account.save();
+    return await fastify.mongoose.Account.findOne({ email });
   });
 
   try {
