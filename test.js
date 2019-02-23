@@ -17,6 +17,20 @@ tap.test("fastify.mongoose should exist", async test => {
     },
     models: [
       {
+        name: "posts",
+        alias: "Post",
+        schema: {
+          title: {
+            type: String,
+            required: true
+          },
+          content: {
+            type: String,
+            required: true
+          }
+        }
+      },
+      {
         name: "accounts",
         alias: "Account",
         schema: {
@@ -40,6 +54,13 @@ tap.test("fastify.mongoose should exist", async test => {
               message: props => `${props.value} is not a valid email!`
             }
           },
+          posts: [
+            {
+              type: "ObjectId",
+              ref: "Post",
+              validateExistance: true
+            }
+          ],
           createdAtUTC: {
             type: Date,
             required: true
