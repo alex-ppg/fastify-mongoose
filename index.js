@@ -30,14 +30,15 @@ const fixReferences = (fastify, schema) => {
     } else if (schema[key].length !== undefined) {
       schema[key].forEach(member => {
         if (member.type === "ObjectId") {
-          schema[key].type = mongoose.Schema.Types.ObjectId;
+          member.type = mongoose.Schema.Types.ObjectId;
 
-          if (schema[key].validateExistance) {
-            delete schema[key].validateExistance;
-            schema[key].validate = {
+          if (member.validateExistance) {
+            delete member.validateExistance;
+
+            member.validate = {
               isAsync: true,
               validator: (v, cb) => {
-                decorator[schema[key].ref]
+                decorator[member.ref]
                   .findById(v)
                   .then(() => {
                     cb(true);
