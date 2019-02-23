@@ -15,7 +15,7 @@ npm i fastify-mongoose-driver -s
 ```javascript
 // ...Other Plugins
 fastify.register(
-  require("fastify-mongoose"),
+  require("fastify-mongoose-driver"),
   {
     uri: "mongodb://admin:pass@localhost:27017/database_name",
     settings: {
