@@ -1,6 +1,6 @@
 # Fastify MongoDB Plugin using Mongoose ODM
 
-[![NPM](https://nodei.co/npm/fastify-mongoose.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fastify-mongoose/)
+[![NPM](https://nodei.co/npm/fastify-mongoose-driver.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fastify-mongoose-driver/)
 
 [![CircleCI](https://circleci.com/gh/alex-ppg/fastify-mongoose.svg?style=svg)](https://circleci.com/gh/alex-ppg/fastify-mongoose)
 
