@@ -67,7 +67,8 @@ tap.test("fastify.mongoose should exist", async test => {
           }
         }
       }
-    ]
+    ],
+    useNameAndAlias: true
   });
 
   fastify.post("/", async ({ body }, reply) => {

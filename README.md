@@ -77,7 +77,8 @@ fastify.register(
           }
         }
       }
-    ]
+    ],
+    useNameAndAlias: true
   },
   err => {
     if (err) throw err;
