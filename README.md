@@ -1,13 +1,13 @@
-# Fastify CockroachDB Plugin using Sequelize ORM
+# Fastify MongoDB Plugin using Mongoose ODM
 
-[![NPM](https://nodei.co/npm/fastify-mongoose.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fastify-mongoose/)
+[![NPM](https://nodei.co/npm/fastify-mongoose-driver.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/fastify-mongoose-driver/)
 
 [![CircleCI](https://circleci.com/gh/alex-ppg/fastify-mongoose.svg?style=svg)](https://circleci.com/gh/alex-ppg/fastify-mongoose)
 
 ## Installation
 
 ```bash
-npm i fastify-mongoose -s
+npm i fastify-mongoose-driver -s
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm i fastify-mongoose -s
 ```javascript
 // ...Other Plugins
 fastify.register(
-  require("fastify-mongoose"),
+  require("fastify-mongoose-driver"),
   {
     uri: "mongodb://admin:pass@localhost:27017/database_name",
     settings: {
