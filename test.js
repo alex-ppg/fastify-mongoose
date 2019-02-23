@@ -52,7 +52,7 @@ tap.test("fastify.mongoose should exist", async test => {
   fastify.post("/", async ({ body }, reply) => {
     const { username, password, email } = body;
     const createdAtUTC = new Date();
-    const account = new fastify.mongoose.models.Account({
+    const account = new fastify.mongoose.Account({
       username,
       password,
       email,
@@ -64,7 +64,7 @@ tap.test("fastify.mongoose should exist", async test => {
   try {
     await fastify.ready();
     test.ok(fastify.mongoose.instance);
-    test.ok(fastify.mongoose.models.Account);
+    test.ok(fastify.mongoose.Account);
 
     const { statusCode, payload } = await fastify.inject({
       method: "POST",

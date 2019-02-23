@@ -64,7 +64,7 @@ fastify.register(
 
 fastify.get("/", (request, reply) => {
   console.log(fastify.mongoose.instance); // Mongoose ODM instance
-  console.log(fastify.mongoose.models.Account); // Any models declared are available here
+  console.log(fastify.mongoose.Account); // Any models declared are available here
 });
 ```
 
@@ -74,7 +74,7 @@ fastify.get("/", (request, reply) => {
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `uri`      | Required, the Unique Resource Identifier to use when connecting to the Database.                                                                                                                      |
 | `settings` | Optional, the settings to be passed on to the MongoDB Driver as well as the Mongoose-specific options. [Refer here for further info](https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect). |
-| `models`   | Optional, any models to be declared and injected under `fastify.mongoose.models`                                                                                                                      |
+| `models`   | Optional, any models to be declared and injected under `fastify.mongoose`                                                                                                                             |
 
 Any models declared should follow the following format:
 
