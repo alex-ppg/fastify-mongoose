@@ -93,11 +93,12 @@ fastify.get("/", (request, reply) => {
 
 ## Options
 
-| Option     | Description                                                                                                                                                                                           |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `uri`      | Required, the Unique Resource Identifier to use when connecting to the Database.                                                                                                                      |
-| `settings` | Optional, the settings to be passed on to the MongoDB Driver as well as the Mongoose-specific options. [Refer here for further info](https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect). |
-| `models`   | Optional, any models to be declared and injected under `fastify.mongoose`                                                                                                                             |
+| Option            | Description                                                                                                                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `uri`             | Required, the Unique Resource Identifier to use when connecting to the Database.                                                                                                                      |
+| `settings`        | Optional, the settings to be passed on to the MongoDB Driver as well as the Mongoose-specific options. [Refer here for further info](https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect). |
+| `models`          | Optional, any models to be declared and injected under `fastify.mongoose`                                                                                                                             |
+| `useNameAndAlias` | Optional, declares models using `mongoose.model(alias, schema, name)` instead of `mongoose.model(name, schema)`                                                                                       |
 
 Any models declared should follow the following format:
 
