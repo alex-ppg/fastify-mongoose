@@ -2,7 +2,7 @@
   "name": "fastify-mongoose-driver",
   "description":
     "A Fastify plugin to connect to a MongoDB instance via the Mongoose ODM",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "tap test.js"
