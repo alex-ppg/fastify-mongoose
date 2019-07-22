@@ -5,7 +5,7 @@ const tap = require("tap");
 const fastifyMongoose = require("./index");
 
 tap.test("fastify.mongoose should exist", async test => {
-  test.plan(6);
+  test.plan(9);
 
   fastify.register(fastifyMongoose, {
     uri: "mongodb://localhost:27017/test",
@@ -27,6 +27,11 @@ tap.test("fastify.mongoose should exist", async test => {
           content: {
             type: String,
             required: true
+          },
+          author: {
+            type: "ObjectId",
+            ref: "Account",
+            validateExistance: true
           }
         }
       },
@@ -84,22 +89,49 @@ tap.test("fastify.mongoose should exist", async test => {
     return await fastify.mongoose.Account.findOne({ email });
   });
 
+  fastify.patch("/", async ({ body }, reply) => {
+    const { title, content, author } = body;
+    const createdAtUTC = new Date();
+    const post = new fastify.mongoose.Post({
+      title,
+      content,
+      author
+    });
+    await post.save();
+    return await fastify.mongoose.Post.findOne({ title });
+  });
+
   try {
     await fastify.ready();
     test.ok(fastify.mongoose.instance);
     test.ok(fastify.mongoose.Account);
 
-    const { statusCode, payload } = await fastify.inject({
+    let { statusCode, payload } = await fastify.inject({
       method: "POST",
       url: "/",
       payload: { username: "test", password: "pass", email: "test@example.com" }
     });
 
-    const { username, password, email } = JSON.parse(payload);
+    console.log(payload);
+
+    const { username, password, email, _id } = JSON.parse(payload);
     test.strictEqual(statusCode, 200);
     test.strictEqual(username, "test");
     test.strictEqual(password, undefined);
     test.strictEqual(email, "test@example.com");
+
+    ({ statusCode, payload } = await fastify.inject({
+      method: "PATCH",
+      url: "/",
+      payload: { author: _id, title: "Hello World", content: "foo bar" }
+    }));
+
+    console.log(payload);
+
+    const { title, content, author } = JSON.parse(payload);
+    test.strictEqual(title, "Hello World");
+    test.strictEqual(content, "foo bar");
+    test.strictEqual(author, _id);
   } catch (e) {
     test.fail("Fastify threw", e);
   }

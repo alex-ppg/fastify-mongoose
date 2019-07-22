@@ -112,8 +112,6 @@ Any models declared should follow the following format:
 
 The `schemaDefinition` variable should be created according to the [Mongoose Model Specification](https://mongoosejs.com/docs/schematypes.html).
 
-Keep in mind that, if an `"ObjectId"` is specified as the `type`, the referenced `Schema` must have been defined first in the `models` input array of the library.
-
 ## Author
 
 [Alex Papageorgiou](alex.ppg@pm.me)

@@ -3,7 +3,7 @@
 const fastifyPlugin = require("fastify-plugin");
 const mongoose = require("mongoose");
 
-const fixReferences = (fastify, schema) => {
+const fixReferences = (decorator, schema) => {
   Object.keys(schema).forEach(key => {
     if (schema[key].type === "ObjectId") {
       schema[key].type = mongoose.Schema.Types.ObjectId;
