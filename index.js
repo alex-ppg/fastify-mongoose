@@ -19,6 +19,7 @@ const fixReferences = (decorator, schema) => {
                 cb(true);
               })
               .catch(() => {
+                /* istanbul ignore next */
                 cb(
                   false,
                   `${schema[key].ref} with ID ${v} does not exist in database!`
@@ -60,10 +61,7 @@ async function mongooseConnector(
   fastify,
   { uri, settings, models = [], useNameAndAlias = false }
 ) {
-  await mongoose.connect(
-    uri,
-    settings
-  );
+  await mongoose.connect(uri, settings);
 
   const decorator = {
     instance: mongoose

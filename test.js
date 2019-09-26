@@ -98,7 +98,7 @@ tap.test("fastify.mongoose should exist", async test => {
       author
     });
     await post.save();
-    return await fastify.mongoose.Post.findOne({ title });
+    return await fastify.mongoose.Post.findById(post._id);
   });
 
   try {
@@ -106,27 +106,29 @@ tap.test("fastify.mongoose should exist", async test => {
     test.ok(fastify.mongoose.instance);
     test.ok(fastify.mongoose.Account);
 
+    const testEmail = `${(+new Date()).toString(36).slice(-5)}@example.com`;
+
     let { statusCode, payload } = await fastify.inject({
       method: "POST",
       url: "/",
-      payload: { username: "test", password: "pass", email: "test@example.com" }
+      payload: {
+        username: "test",
+        password: "pass",
+        email: testEmail
+      }
     });
-
-    console.log(payload);
 
     const { username, password, email, _id } = JSON.parse(payload);
     test.strictEqual(statusCode, 200);
     test.strictEqual(username, "test");
     test.strictEqual(password, undefined);
-    test.strictEqual(email, "test@example.com");
+    test.strictEqual(email, testEmail);
 
     ({ statusCode, payload } = await fastify.inject({
       method: "PATCH",
       url: "/",
       payload: { author: _id, title: "Hello World", content: "foo bar" }
     }));
-
-    console.log(payload);
 
     const { title, content, author } = JSON.parse(payload);
     test.strictEqual(title, "Hello World");
