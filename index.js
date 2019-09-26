@@ -11,20 +11,15 @@ const fixReferences = (decorator, schema) => {
       if (schema[key].validateExistance) {
         delete schema[key].validateExistance;
         schema[key].validate = {
-          isAsync: true,
-          validator: (v, cb) => {
-            decorator[schema[key].ref]
-              .findById(v)
-              .then(() => {
-                cb(true);
-              })
-              .catch(() => {
-                /* istanbul ignore next */
-                cb(
-                  false,
-                  `${schema[key].ref} with ID ${v} does not exist in database!`
-                );
-              });
+          validator: async (v, cb) => {
+            try {
+              await decorator[schema[key].ref].findById(v);
+            } catch (e) {
+              /* istanbul ignore next */
+              throw new Error(
+                `${schema[key].ref} with ID ${v} does not exist in database!`
+              );
+            }
           }
         };
       }
@@ -37,17 +32,15 @@ const fixReferences = (decorator, schema) => {
             delete member.validateExistance;
 
             member.validate = {
-              isAsync: true,
-              validator: (v, cb) => {
-                decorator[member.ref]
-                  .findById(v)
-                  .then(() => {
-                    cb(true);
-                  })
-                  .catch(() => {
-                    /* istanbul ignore next */
-                    cb(false, `Post with ID ${v} does not exist in database!`);
-                  });
+              validator: async (v, cb) => {
+                try {
+                  await decorator[member.ref].findById(v);
+                } catch (e) {
+                  /* istanbul ignore next */
+                  throw new Error(
+                    `Post with ID ${v} does not exist in database!`
+                  );
+                }
               }
             };
           }
