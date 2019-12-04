@@ -11,9 +11,9 @@ class PostClass {
 }
 
 tap.test("fastify.mongoose should exist", async test => {
-  test.plan(10);
+  test.plan(12);
 
-  fastify.register(fastifyMongoose, {
+  fastify.register(fastifyMongoose.plugin, {
     uri: "mongodb://localhost:27017/test",
     settings: {
       useNewUrlParser: true,
@@ -142,6 +142,9 @@ tap.test("fastify.mongoose should exist", async test => {
     test.strictEqual(title, "Hello World");
     test.strictEqual(content, "foo bar");
     test.strictEqual(author, _id);
+
+    test.ok(fastifyMongoose.decorator().instance);
+    test.ok(fastifyMongoose.decorator().Account);
   } catch (e) {
     test.fail("Fastify threw", e);
   }

@@ -50,13 +50,15 @@ const fixReferences = (decorator, schema) => {
   });
 };
 
+let decorator;
+
 async function mongooseConnector(
   fastify,
   { uri, settings, models = [], useNameAndAlias = false }
 ) {
   await mongoose.connect(uri, settings);
 
-  const decorator = {
+  decorator = {
     instance: mongoose
   };
 
@@ -91,4 +93,7 @@ async function mongooseConnector(
   fastify.decorate("mongoose", decorator);
 }
 
-module.exports = fastifyPlugin(mongooseConnector);
+module.exports = {
+  plugin: fastifyPlugin(mongooseConnector),
+  decorator: () => decorator
+};

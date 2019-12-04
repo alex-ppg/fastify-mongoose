@@ -15,7 +15,7 @@ npm i fastify-mongoose-driver -s
 ```javascript
 // ...Other Plugins
 fastify.register(
-  require("fastify-mongoose-driver"),
+  require("fastify-mongoose-driver").plugin,
   {
     uri: "mongodb://admin:pass@localhost:27017/database_name",
     settings: {
@@ -89,6 +89,8 @@ fastify.get("/", (request, reply) => {
   console.log(fastify.mongoose.instance); // Mongoose ODM instance
   console.log(fastify.mongoose.Account); // Any models declared are available here
 });
+
+require("fastify-mongoose-driver").decorator(); // Returns the decorator pointer, useful for using mongoose in seperate files
 ```
 
 ## Options
@@ -106,11 +108,13 @@ Any models declared should follow the following format:
 {
   name: "profiles", // Required, should match name of model in database
   alias: "Profile", // Optional, an alias to inject the model as
-  schema: schemaDefinition // Required, should match schema of model in database
+  schema: schemaDefinition // Required, should match schema of model in database,
+  class: classDefinition // Optional, should be an ES6 class wrapper for the model
 }
 ```
 
 The `schemaDefinition` variable should be created according to the [Mongoose Model Specification](https://mongoosejs.com/docs/schematypes.html).
+The `classDefinition` variable should be created according to the [Mongoose Class Specification](https://mongoosejs.com/docs/4.x/docs/advanced_schemas.html).
 
 ## Author
 
