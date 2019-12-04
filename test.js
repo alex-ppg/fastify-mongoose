@@ -4,6 +4,13 @@ const fastify = require("fastify")();
 const tap = require("tap");
 const fastifyMongoose = require("./index");
 
+class PostClass {
+  // `fullTitle` becomes a virtual
+  get fullTitle() {
+    return `Title: ${this.title}`;
+  }
+}
+
 tap.test("fastify.mongoose should exist", async test => {
   test.plan(9);
 
@@ -33,7 +40,8 @@ tap.test("fastify.mongoose should exist", async test => {
             ref: "Account",
             validateExistance: true
           }
-        }
+        },
+        class: PostClass
       },
       {
         name: "accounts",
@@ -130,7 +138,8 @@ tap.test("fastify.mongoose should exist", async test => {
       payload: { author: _id, title: "Hello World", content: "foo bar" }
     }));
 
-    const { title, content, author } = JSON.parse(payload);
+    const { title, fullTitle, content, author } = JSON.parse(payload);
+    test.strictEqual(fullTitle, "Title: Hello World");
     test.strictEqual(title, "Hello World");
     test.strictEqual(content, "foo bar");
     test.strictEqual(author, _id);

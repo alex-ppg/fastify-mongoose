@@ -64,13 +64,17 @@ async function mongooseConnector(
     models.forEach(model => {
       fixReferences(decorator, model.schema);
 
+      const schema = new mongoose.Schema(model.schema);
+
+      if (model.class) schema.loadClass(model.class);
+
       if (useNameAndAlias) {
         if (model.alias === undefined)
           throw new Error(`No alias defined for ${model.name}`);
 
         decorator[model.alias] = mongoose.model(
           model.alias,
-          new mongoose.Schema(model.schema),
+          schema,
           model.name
         );
       } else {
@@ -78,7 +82,7 @@ async function mongooseConnector(
           model.alias
             ? model.alias
             : `${model.name[0].toUpperCase()}${model.name.slice(1)}`
-        ] = mongoose.model(model.name, new mongoose.Schema(model.schema));
+        ] = mongoose.model(model.name, schema);
       }
     });
   }
