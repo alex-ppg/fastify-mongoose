@@ -5,14 +5,13 @@ const tap = require("tap");
 const fastifyMongoose = require("./index");
 
 class PostClass {
-  // `fullTitle` becomes a virtual
   get fullTitle() {
     return `Title: ${this.title}`;
   }
 }
 
 tap.test("fastify.mongoose should exist", async test => {
-  test.plan(9);
+  test.plan(10);
 
   fastify.register(fastifyMongoose, {
     uri: "mongodb://localhost:27017/test",
@@ -99,7 +98,6 @@ tap.test("fastify.mongoose should exist", async test => {
 
   fastify.patch("/", async ({ body }, reply) => {
     const { title, content, author } = body;
-    const createdAtUTC = new Date();
     const post = new fastify.mongoose.Post({
       title,
       content,
@@ -107,10 +105,7 @@ tap.test("fastify.mongoose should exist", async test => {
     });
     await post.save();
     const foundPost = await fastify.mongoose.Post.findById(post._id);
-    return {
-      ...foundPost.lean(),
-      fullTitle: foundPost.fullTitle
-    };
+    return foundPost.toObject({ virtuals: true });
   });
 
   try {

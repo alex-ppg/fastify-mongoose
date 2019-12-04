@@ -69,6 +69,7 @@ async function mongooseConnector(
       if (model.class) schema.loadClass(model.class);
 
       if (useNameAndAlias) {
+        /* istanbul ignore next */
         if (model.alias === undefined)
           throw new Error(`No alias defined for ${model.name}`);
 
