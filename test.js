@@ -106,7 +106,11 @@ tap.test("fastify.mongoose should exist", async test => {
       author
     });
     await post.save();
-    return await fastify.mongoose.Post.findById(post._id);
+    const foundPost = await fastify.mongoose.Post.findById(post._id);
+    return {
+      ...foundPost.lean(),
+      fullTitle: foundPost.fullTitle
+    };
   });
 
   try {
