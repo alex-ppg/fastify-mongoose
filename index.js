@@ -90,6 +90,14 @@ async function mongooseConnector(
     });
   }
 
+  // Close connection when app is closing
+  fastify.addHook('onClose', (app, done) => {
+    app.mongoose.instance.connection.on('close', function() {
+      done()
+    })
+    app.mongoose.instance.connection.close()
+  })
+
   fastify.decorate("mongoose", decorator);
 }
 

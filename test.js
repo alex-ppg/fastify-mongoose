@@ -148,5 +148,5 @@ tap.test("fastify.mongoose should exist", async test => {
   } catch (e) {
     test.fail("Fastify threw", e);
   }
-  fastify.mongoose.instance.connection.close();
+  fastify.close();
 });
