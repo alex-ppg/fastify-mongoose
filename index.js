@@ -66,7 +66,7 @@ async function mongooseConnector(
     models.forEach(model => {
       fixReferences(decorator, model.schema);
 
-      const schema = new mongoose.Schema(model.schema);
+      const schema = new mongoose.Schema(model.schema, model.options);
 
       if (model.class) schema.loadClass(model.class);
 
