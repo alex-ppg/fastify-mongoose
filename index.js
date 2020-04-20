@@ -4,7 +4,7 @@ const fastifyPlugin = require("fastify-plugin");
 const mongoose = require("mongoose");
 
 const fixReferences = (decorator, schema) => {
-  Object.keys(schema).forEach(key => {
+  Object.keys(schema).forEach((key) => {
     if (schema[key].type === "ObjectId") {
       schema[key].type = mongoose.Schema.Types.ObjectId;
 
@@ -20,11 +20,11 @@ const fixReferences = (decorator, schema) => {
                 `${schema[key].ref} with ID ${v} does not exist in database!`
               );
             }
-          }
+          },
         };
       }
     } else if (schema[key].length !== undefined) {
-      schema[key].forEach(member => {
+      schema[key].forEach((member) => {
         if (member.type === "ObjectId") {
           member.type = mongoose.Schema.Types.ObjectId;
 
@@ -41,7 +41,7 @@ const fixReferences = (decorator, schema) => {
                     `Post with ID ${v} does not exist in database!`
                   );
                 }
-              }
+              },
             };
           }
         }
@@ -59,16 +59,18 @@ async function mongooseConnector(
   await mongoose.connect(uri, settings);
 
   decorator = {
-    instance: mongoose
+    instance: mongoose,
   };
 
   if (models.length !== 0) {
-    models.forEach(model => {
+    models.forEach((model) => {
       fixReferences(decorator, model.schema);
 
       const schema = new mongoose.Schema(model.schema, model.options);
 
       if (model.class) schema.loadClass(model.class);
+
+      if (model.virtualize) model.virtualize(schema);
 
       if (useNameAndAlias) {
         /* istanbul ignore next */
@@ -92,7 +94,7 @@ async function mongooseConnector(
 
   // Close connection when app is closing
   fastify.addHook("onClose", (app, done) => {
-    app.mongoose.instance.connection.on("close", function() {
+    app.mongoose.instance.connection.on("close", function () {
       done();
     });
     app.mongoose.instance.connection.close();
@@ -103,5 +105,5 @@ async function mongooseConnector(
 
 module.exports = {
   plugin: fastifyPlugin(mongooseConnector),
-  decorator: () => decorator
+  decorator: () => decorator,
 };
