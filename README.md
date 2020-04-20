@@ -21,8 +21,8 @@ fastify.register(
     settings: {
       useNewUrlParser: true,
       config: {
-        autoIndex: true
-      }
+        autoIndex: true,
+      },
     },
     models: [
       {
@@ -31,56 +31,61 @@ fastify.register(
         schema: {
           title: {
             type: String,
-            required: true
+            required: true,
           },
           content: {
             type: String,
-            required: true
-          }
-        }
+            required: true,
+          },
+          // We can add references to other Schemas like-so
+          author: {
+            type: "ObjectId",
+            ref: "Account",
+            validateExistance: true,
+          },
+        },
       },
       {
         name: "accounts",
         alias: "Account",
         schema: {
           username: {
-            type: String
+            type: String,
           },
           password: {
             type: String,
             select: false,
-            required: true
+            required: true,
           },
           email: {
             type: String,
             unique: true,
             required: true,
             validate: {
-              validator: v => {
+              validator: (v) => {
                 // Super simple email regex: https://stackoverflow.com/a/4964763/7028187
                 return /^.+@.{2,}\..{2,}$/.test(v);
               },
-              message: props => `${props.value} is not a valid email!`
-            }
+              message: (props) => `${props.value} is not a valid email!`,
+            },
           },
-          // We can add references to other Schemas like-so
-          posts: [
-            {
-              type: "ObjectId",
-              ref: "Post",
-              validateExistance: true
-            }
-          ],
           createdAtUTC: {
             type: Date,
-            required: true
-          }
-        }
-      }
+            required: true,
+          },
+        },
+        virtualize: (schema) => {
+          schema.virtual("posts", {
+            ref: "Post",
+            localKey: "_id",
+            foreignKey: "author",
+          });
+        },
+      },
     ],
-    useNameAndAlias: true
+    useNameAndAlias: true,
   },
-  err => {
+  (err) => {
     if (err) throw err;
   }
 );
