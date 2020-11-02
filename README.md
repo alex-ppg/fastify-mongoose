@@ -44,6 +44,10 @@ fastify.register(
             validateExistance: true,
           },
         },
+        // We can also add schema configurable options
+        options: {
+          timestamps: true,
+        },
       },
       {
         name: "accounts",
@@ -113,12 +117,16 @@ Any models declared should follow the following format:
 {
   name: "profiles", // Required, should match name of model in database
   alias: "Profile", // Optional, an alias to inject the model as
-  schema: schemaDefinition // Required, should match schema of model in database,
+  schema: schemaDefinition, // Required, should match schema of model in database,
+  options: schemaOptions, // Optional, schema configurable options
   class: classDefinition // Optional, should be an ES6 class wrapper for the model
 }
 ```
 
 The `schemaDefinition` variable should be created according to the [Mongoose Model Specification](https://mongoosejs.com/docs/schematypes.html).
+
+The `schemaOptions` variable should be created according to the [Mongoose Model Options Specification](https://mongoosejs.com/docs/guide.html#options).
+
 The `classDefinition` variable should be created according to the [Mongoose Class Specification](https://mongoosejs.com/docs/4.x/docs/advanced_schemas.html).
 
 ## Author
