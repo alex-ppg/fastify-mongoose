@@ -50,6 +50,26 @@ const fixReferences = (decorator, schema) => {
   });
 };
 
+const addPreMiddleware = (schema, model) => {
+  const keys = Object.keys(model.pre);
+
+  keys.forEach((k) => {
+    if(typeof model.pre[k] === 'function') {
+      schema.pre(k, model.pre[k]);
+    }
+  });
+};
+
+const addPostMiddleware = (schema, model) => {
+  const keys = Object.keys(model.post);
+
+	keys.forEach((k) => {
+		if (typeof model.post[k] === "function") {
+			schema.post(k, model.post[k]);
+		}
+	});
+};
+
 let decorator;
 
 async function mongooseConnector(
@@ -71,6 +91,14 @@ async function mongooseConnector(
       if (model.class) schema.loadClass(model.class);
 
       if (model.virtualize) model.virtualize(schema);
+
+      if(model.pre) {
+        addPreMiddleware(schema, model);
+      }
+
+      if(model.post) {
+        addPostMiddleware(schema, model);
+      }
 
       if (useNameAndAlias) {
         /* istanbul ignore next */
