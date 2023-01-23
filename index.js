@@ -1,7 +1,10 @@
 "use strict";
 
 const fastifyPlugin = require("fastify-plugin");
+const { model } = require("mongoose");
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 
 const fixReferences = (decorator, schema) => {
   Object.keys(schema).forEach((key) => {
@@ -50,17 +53,44 @@ const fixReferences = (decorator, schema) => {
   });
 };
 
+const walkDir = (modelDirPath, fileList = []) => {
+  const dir = fs.readdirSync(modelDirPath);
+  dir.forEach((file) => {
+    const pathFile = path.join(modelDirPath, file);
+    const stat = fs.statSync(pathFile);
+    if (stat.isDirectory())
+      fileList = walkDir(pathFile, fileList);
+    else
+      fileList.push(pathFile);
+  });
+  return fileList
+};
+
+const loadModelsFromPath = (modelDirPath) => {
+  const modelsFromPath = []
+  const schemaFiles = walkDir(modelDirPath);
+  console.log(schemaFiles);
+  schemaFiles.forEach((file) => {
+    const model = require(file);
+    modelsFromPath.push(model);
+  });
+  return modelsFromPath;
+};
+
 let decorator;
 
 async function mongooseConnector(
   fastify,
-  { uri, settings, models = [], useNameAndAlias = false }
+  { uri, settings, models = [], useNameAndAlias = false,
+    modelDirPath = undefined }
 ) {
   await mongoose.connect(uri, settings);
 
   decorator = {
     instance: mongoose,
   };
+
+  if (modelDirPath) models = [...loadModelsFromPath(modelDirPath), ...models];
 
   if (models.length !== 0) {
     models.forEach((model) => {

@@ -84,6 +84,7 @@ fastify.register(
       },
     ],
     useNameAndAlias: true,
+    modelDirPath: path.resolve("..."), // will be merged with models
   },
   (err) => {
     if (err) throw err;
@@ -106,6 +107,7 @@ require("fastify-mongoose-driver").decorator(); // Returns the decorator pointer
 | `settings`        | Optional, the settings to be passed on to the MongoDB Driver as well as the Mongoose-specific options. [Refer here for further info](https://mongoosejs.com/docs/api.html#mongoose_Mongoose-connect). |
 | `models`          | Optional, any models to be declared and injected under `fastify.mongoose`                                                                                                                             |
 | `useNameAndAlias` | Optional, declares models using `mongoose.model(alias, schema, name)` instead of `mongoose.model(name, schema)`                                                                                       |
+| `modelDirPath` | Optional, directory where it's possible to define models in separate files. The directory will be trasverse includes all subdirectories
 
 Any models declared should follow the following format:
 
@@ -117,6 +119,15 @@ Any models declared should follow the following format:
   class: classDefinition // Optional, should be an ES6 class wrapper for the model
 }
 ```
+
+or, if definitions are splitted in separate files using modelDirPath option:
+```javascript
+// modelDirPath/profile.js
+module.exports = {
+  ...
+}
+```
+
 
 The `schemaDefinition` variable should be created according to the [Mongoose Model Specification](https://mongoosejs.com/docs/schematypes.html).
 The `classDefinition` variable should be created according to the [Mongoose Class Specification](https://mongoosejs.com/docs/4.x/docs/advanced_schemas.html).
