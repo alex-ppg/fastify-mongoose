@@ -120,7 +120,7 @@ Any models declared should follow the following format:
 }
 ```
 
-or, if definitions are splitted in separate files using modelDirPath option:
+or, if definitions are splitted in separate files using `modelDirPath` option:
 ```javascript
 // modelDirPath/profile.js
 module.exports = {
