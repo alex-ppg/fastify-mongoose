@@ -1,7 +1,6 @@
 "use strict";
 
 const fastifyPlugin = require("fastify-plugin");
-const { model } = require("mongoose");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
@@ -69,7 +68,6 @@ const walkDir = (modelDirPath, fileList = []) => {
 const loadModelsFromPath = (modelDirPath) => {
   const modelsFromPath = []
   const schemaFiles = walkDir(modelDirPath);
-  console.log(schemaFiles);
   schemaFiles.forEach((file) => {
     const model = require(file);
     modelsFromPath.push(model);
