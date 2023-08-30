@@ -135,3 +135,6 @@ module.exports = {
   plugin: fastifyPlugin(mongooseConnector),
   decorator: () => decorator,
 };
+
+module.exports.default = mongooseConnector
+module.exports.mongooseConnector = mongooseConnector
